@@ -1,0 +1,7 @@
+[testOne] Hello, World.
+[fakePerson] hi
+[testTwo] Hello, to you.
+[break] #Comment here
+[testOne] Back from Break.
+[testOne] Back to Back Dialogue.
+[end] #End comment here
