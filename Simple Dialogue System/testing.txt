@@ -5,3 +5,13 @@
 [testOne] Back from Break.
 [testOne] Back to Back Dialogue.
 [end] #End comment here
+
+*DAMAGE* 
+[testTwo] Watch it!
+[testOne] Don't worry, we can buff out those scratches!
+*END*
+
+*DESTROYEDONE*
+[testOne] That's one down, one to go.
+[testTwo] Zeroing in on it now.
+*END*
