@@ -14,6 +14,7 @@ public class Dialogue : MonoBehaviour
      * public Text CharName
      */
     public GameObject dialogueBox;
+  
 
     private int lineNumber;
     private string nextLine;
@@ -43,7 +44,7 @@ public class Dialogue : MonoBehaviour
             //Collect labels
             for(int i = 0; i < lines.Length; i++)
             {
-                if(lines[i].Substring(0, 1) == "*" && lines[i] != "*END*")
+                if(lines[i].Substring(0, 1) == "*" && lines[i].Substring(1, 3) != "END")
                 {
                     int length = lines[i].LastIndexOf('*');
                     Debug.Log(lines[i].Substring(1, length - 1));
@@ -54,8 +55,19 @@ public class Dialogue : MonoBehaviour
         
     }
 
-    //Used for reading from a character script, invoke to advance the script!
-    public void SayNextLine()
+    //Used for reading from a character script, invoke to advance the script to the next break or end!
+    public IEnumerator SayNextBlock()
+    {
+        int result = -1;
+        while (result != 0)
+        {
+            result = SayNextLine();
+            yield return new WaitForSeconds(2);
+        }
+    }
+
+    //Says the next line of the script. Returns 0 on a break or 1 on a line read
+    public int SayNextLine()
     {
         //End of script
         if (nextLine.Substring(0, 5) == "[end]")
@@ -63,7 +75,7 @@ public class Dialogue : MonoBehaviour
             Debug.Log("End of Script");
             HideBox();
 
-            return;
+            return 0;
         }
 
         //Say Nothing
@@ -72,11 +84,12 @@ public class Dialogue : MonoBehaviour
             HideBox();
             AdvanceLineNumber(1);
 
-            return;
+            return 0;
         }
 
         ParseLine(nextLine);
-        AdvanceLineNumber(1);  
+        AdvanceLineNumber(1);
+        return 1;
     }
 
     //Used for saying One Off Remarks that don't fit into the character script
@@ -85,12 +98,16 @@ public class Dialogue : MonoBehaviour
         int index;
         string line;
 
-        Debug.Log("Label: " + label);
+        //Debug.Log("Label: " + label);
 
         //Parse the Line
         index = ((int) labels[label]) + 1;
-        while ((line = lines[index++]) != "*END*" )
-        { 
+        while(true)
+        {
+            line = lines[index++];
+            if (line.Substring(1, 3).Equals("END"))
+                break;
+
             ParseLine(line);
             yield return new WaitForSeconds(2);
         }
